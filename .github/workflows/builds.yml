@@ -1,0 +1,41 @@
+name: builds
+
+on:
+  workflow_dispatch:
+  #push:
+  #  branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Setup MSVC Environment
+      uses: ilammy/msvc-dev-cmd@v1.10.0
+    
+    - name: Setup vcpkg & dependencies
+      uses: lukka/run-vcpkg@v10.0
+      with:
+        vcpkgGitCommitId: fc3f61366102c1f0d4547c06d03c523bb18c13a7
+        runVcpkgInstall: true
+    
+    - name: Build
+      uses: lukka/run-cmake@v10.0
+      with:
+        cmakeListsTxtPath: ${{ github.workspace }}/main/CMakeLists.txt
+        configurePreset: build-release-msvc
+        buildPreset: release-msvc
+        configurePresetAdditionalArgs: "['-DOUTPUT_FOLDER=dist']"
+    
+    - name: Create artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build_result
+        path: dist
+        if-no-files-found: error
+        overwrite: true
