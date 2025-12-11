@@ -57,7 +57,7 @@ if(DEFINED OUTPUT_FOLDER)
     # Copy the SKSE plugin .dll files into the SKSE/Plugins/ folder
     set(DLL_FOLDER "${OUTPUT_FOLDER}/SKSE/Plugins")
 
-    set (CONFIG_FOLDER "Template_Plugin")
+    set(CONFIG_FOLDER "${PROJECT_NAME}")
     set(SRC_CONFIG_FOLDER "${CMAKE_SOURCE_DIR}/config")
     
     message(STATUS "SKSE plugin output folder: ${DLL_FOLDER}")
