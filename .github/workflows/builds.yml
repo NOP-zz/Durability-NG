@@ -19,13 +19,6 @@ jobs:
     - name: Setup MSVC Environment
       uses: ilammy/msvc-dev-cmd@v1.10.0
     
-    #- name: Setup vcpkg & dependencies
-    #  uses: lukka/run-vcpkg@v11.0
-    #  with:
-    #    vcpkgGitCommitId: 74e6536215718009aae747d86d84b78376bf9e09
-    #    runVcpkgInstall: true
-    #    doNotCache: false
-
     - name: Restore vcpkg cache
       id: vcpkg-cache
       uses: TAServers/vcpkg-cache@v3
@@ -33,14 +26,12 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Build
-      uses: lukka/run-cmake@v10.0
       env:
         VCPKG_FEATURE_FLAGS: "binarycaching"
         VCPKG_BINARY_SOURCES: "clear;files,${{ steps.vcpkg-cache.outputs.path }},readwrite"
-      with:
-        configurePreset: build-release-msvc
-        buildPreset: release-msvc
-        configurePresetAdditionalArgs: "['-DOUTPUT_FOLDER=dist']"
+      run: |
+        cmake --preset build-release-msvc -DOUTPUT_FOLDER=dist
+        cmake --build --preset release-msvc
     
     - name: Create artifact
       uses: actions/upload-artifact@v4
