@@ -1,16 +1,11 @@
 #include "log.h"
-
-
-void OnDataLoaded()
-{
-   
-}
+#include "Events.h"
 
 void MessageHandler(SKSE::MessagingInterface::Message* a_msg)
 {
 	switch (a_msg->type) {
 	case SKSE::MessagingInterface::kDataLoaded:
-        
+		DurabilityNG::InitEvents();
 		break;
 	case SKSE::MessagingInterface::kPostLoad:
 		break;
@@ -24,15 +19,13 @@ void MessageHandler(SKSE::MessagingInterface::Message* a_msg)
 }
 
 SKSEPluginLoad(const SKSE::LoadInterface *skse) {
-    SKSE::Init(skse);
 	SetupLog();
-
+    SKSE::Init(skse);
 
     auto messaging = SKSE::GetMessagingInterface();
 	if (!messaging->RegisterListener("SKSE", MessageHandler)) {
 		return false;
 	}
-
 	
     return true;
 }
