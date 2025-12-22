@@ -83,7 +83,7 @@ public:
 		do {
 			if (event->projectile) break;
 			if (!event->source) break;
-			const auto& info = settings->Attack.ActorInfo(attacker);
+			const auto& info = settings->Attack.ActorInfo(attacker, event->flags);
 			if (!info) break;
 			const auto& proc = attacker->GetActorRuntimeData().currentProcess;
 			if (!proc) break;
@@ -97,9 +97,9 @@ public:
 			settings->Degrade(info, attacker, entry, event->flags, left);
 		} while(false);
 
-		if (const auto& info = settings->Defense.ActorInfo(attacker))
+		if (const auto& info = settings->Defense.ActorInfo(attacker, event->flags))
 			if (const auto& proc = defender->GetActorRuntimeData().currentProcess) {
-				auto pick = PickOne<RE::TESForm *>();
+				PickOne<RE::TESForm *> pick;
 				bool blocked = event->flags.any(RE::TESHitEvent::Flag::kHitBlocked);
 				uint32_t armorRaw = 0;
 				for (const auto& eqObj : proc->equippedForms) {
@@ -131,8 +131,9 @@ public:
 			}
 		
 		do {
-			const auto& info = settings->Destroy.ActorInfo(attacker);
+			const auto& info = settings->Destroy.ActorInfo(attacker, event->flags);
 			if (!info) break;
+			if (!(info >= 1.0 || info > Tools::RandU<float>())) break;
 			auto invCh = defender->GetInventoryChanges();
 			if (!invCh) break;
 			auto weight = invCh->totalWeight - invCh->armorWeight;

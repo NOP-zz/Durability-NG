@@ -3,5 +3,6 @@ set(headers ${headers}
     src/log.h
     src/Tools.h
     src/Settings.h
+    src/SimpleIni.h
     src/Events.h
 )
