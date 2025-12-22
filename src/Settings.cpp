@@ -183,11 +183,11 @@ void Settings::Load(CSimpleIniA &ini)
                 if (auto kw = RE::TESForm::LookupByEditorID<RE::BGSKeyword>(mat.pItem))
                     kw2mul.try_emplace(kw->GetFormID(), v);
                 else
-                    SKSE::log::warn(std::format("unknown keyword: {}", mat.pItem));
+                    SKSE::log::warn(std::string("unknown keyword: {}") + mat.pItem);
             else
                 noMaterialMult = v;
         else
-            SKSE::log::warn(std::format("invalid value for keyword: {}", mat.pItem));
+            SKSE::log::warn(std::string("invalid value for keyword: {}") + mat.pItem);
 
     SKSE::log::info("settings loaded");
 }
